@@ -383,7 +383,6 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 	else if( (checker[i1][j1] == 'w' && checker[i2][j2] == ' ' && i2 == 7 && i1 == 5  && ( j2 - j1 == 0 ) && ( checker[6][j1] == 'b' || checker[6][j1] == 'B' )  )  )
 	{
 		checker[6][j1] = ' ';
-		bpiece--;
 		checker[i2][j2] = 'W';
 		checker[i1][j1] = ' ';
 		fileUpdater(checker, i1, i2, j1, j2, 1, 6, j1);
@@ -393,7 +392,6 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 		else if( (checker[i1][j1] == 'b' && checker[i2][j2] == ' ' && i2 == 0 && i1 == 2  && ( j2 - j1 == 0 ) && ( checker[1][j1] == 'w' || checker[6][j1] == 'W' )  )  )
 	{
 		checker[1][j1] = ' ';
-		bpiece--;
 		checker[i2][j2] = 'B';
 		checker[i1][j1] = ' ';
 		fileUpdater(checker, i1, i2, j1, j2, 1, 1, j1);
@@ -431,7 +429,6 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 				checker[i2][j2] = 'W';
 			checker[i1][j1] = ' ';
 			checker[i1][j2-1] = ' ';
-			bpiece--;
 			fileUpdater(checker, i1, i2, j1, j2, 1, i1, j2-1);
 			return 2;
 		}
@@ -444,7 +441,6 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 				checker[i2][j2] = 'W';
 			checker[i1][j1] = ' ';
 			checker[i1][j2+1] = ' ';
-			bpiece--;
 			fileUpdater(checker, i1, i2, j1, j2, 1, i1, j2+1);
 			return 2;
 		}
@@ -457,7 +453,6 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 				checker[i2][j2] = 'W';
 			checker[i1][j1] = ' ';
 			checker[i1+1][j1] = ' ';
-			bpiece--;
 			fileUpdater(checker, i1, i2, j1, j2, 1, i1+1, j1);
 			return 2;
 		}
@@ -471,7 +466,6 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 				checker[i2][j2] = 'B';
 			checker[i1][j1] = ' ';
 			checker[i1][j2-1] = ' ';
-			wpiece--;
 			fileUpdater(checker, i1, i2, j1, j2, 1, i1, j2-1);
 			return 2;
 		}
@@ -484,7 +478,6 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 				checker[i2][j2] = 'B';
 			checker[i1][j1] = ' ';
 			checker[i1][j2+1] = ' ';
-			wpiece--;
 			fileUpdater(checker, i1, i2, j1, j2, 1, i1, j2+1);
 			return 2;
 		}
@@ -546,7 +539,6 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 			checker[i2][j2] = 'W';
 			checker[i1][j1] = ' ';
 			checker[x][y] = ' ';
-			bpiece--;
 			fileUpdater(checker, i1, i2, j1, j2, 1, x, y);
 			return 2;
 			
@@ -592,7 +584,6 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 			checker[i2][j2] = 'W';
 			checker[i1][j1] = ' ';
 			checker[x][y] = ' ';
-			bpiece--;
 			fileUpdater(checker, i1, i2, j1, j2, 1, x, y);
 			return 2;
 			
@@ -637,7 +628,6 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 			checker[i2][j2] = 'B';
 			checker[i1][j1] = ' ';
 			checker[x][y] = ' ';
-			bpiece--;
 			fileUpdater(checker, i1, i2, j1, j2, 1, x, y);
 			return 2;
 		}
@@ -679,7 +669,6 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 			checker[i2][j2] = 'B';
 			checker[i1][j1] = ' ';
 			checker[x][y] = ' ';
-			bpiece--;
 			fileUpdater(checker, i1, i2, j1, j2, 1, x, y);
 			return 2;
 		}
