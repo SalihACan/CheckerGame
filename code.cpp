@@ -78,8 +78,6 @@ void fileUpdater(char checker[MAX_ROW][MAX_COL], int i1, int i2, int j1, int j2,
 	{
 		loc = i1*9 + j1;
 		fseek(fuptr, loc, SEEK_SET);
-		fread(&t, sizeof(t), 1, fuptr);
-		fseek(fuptr, loc, SEEK_SET);
 		fwrite(&emp, sizeof(char), 1, fuptr);
 		
 		loc = i2*9 + j2;
@@ -164,12 +162,12 @@ void commandLogFunc(int playe, char command[4] ) // bu fonksiyon oyuncularin ham
 	// w:a3a4
 	// b:f5e5
 	// sequential file organization designed using fprintf() function
-	char *c, *data;
+	char c[2], *data;
 	if( playe == 1 )
-		c = "w:" ;
+		c[0] = 'w' ;
 	else if( playe == 0 )
-		c = "b:";
-  
+		c[0] = 'b' ;
+  	c[1] = ':';
 	char* str1;
     char* str2;
     str1 = c;
@@ -827,8 +825,8 @@ int main()
 				"2. Continue Game\n"
 				"3. Enough For Today!\n\n");
 		printf("Enter your choice: ");
-		scanf("%d", &choice);
-		
+		fflush(stdin);
+		scanf("%d", &choice) ;
 		switch(choice)
 		{
 			case 1:
@@ -869,7 +867,8 @@ int main()
 			
 			default:
 				clrscr();
-				printf("\n******Wrong choice, try again**********\n");
+				printf("\n******Wrong choice, try again**********\n\n");
+				printf("Please make your choice with numbers.!\n");
 		}
  	}
  	return 0;
