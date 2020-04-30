@@ -51,32 +51,63 @@ void fileCreator(char checker[MAX_ROW][MAX_COL]) // bu fonksiyon oyunun ilk acil
 
 void fileUpdater(char checker[MAX_ROW][MAX_COL], int i1, int i2, int j1, int j2, int rmv, int ri, int rj) // bu fonksiyon her hamleden sonra tahta gorunumunu dosyadan guncellemek icin olusturuldu
 {
+	 
+//	    i,j										location formula is = i * 9 + j			
+//	0-  0,0 0,1 0,2 0,3 0,4 0,5 0,6 0,7
+//	9-  1,0	1,1 1,2 1,3 1,4 1,5 1,6 1,7 
+//	18- 2,0	2,1 2,2 2,3 2,4 2,5 2,6 2,7 
+//	27- 3,0	3,1 3,2 3,3 3,4 3,5 3,6 3,7 
+//	36- 4,0	4,1 4,2 4,3 4,4 4,5 4,6 4,7 
+//	45- 5,0	5,1 5,2 5,3 5,4 5,5 5,6 5,7	 
+//	54- 6,0	6,1 6,2 6,3 6,4 6,5 6,6 6,7 
+//	63- 7,0	7,1 7,2 7,3 7,4 7,5 7,6 7,7 
+//	
+	int loc = 0;
+	int col = 8;
+	char emp = ' ';
+	char w,b,t,c;
 	
-//	int p;
-//	FILE * fuptr;
-//	fuptr = fopen("checkersLog.txt", "w+");
-	
-//	fseek(fuptr, p, SEEK_SET);
-	
-
-	
-// rewind(fuptr) used for to set file pointer to starting point in the file
-// fseek(fuptr, 0, 0) this will take us to the beginning of the file
-// fseek(fuptr, N, 0) this will take us to (N+1)th bytes in the file
-// fseek(fuptr, -1, 2) this will take us to the last char of the file
-
-//	i,j						x							
-//	0,0 0,1 0,2 0,3 0,4 0,5 0,6 0,7
-//	1,0	1,1 1,2 1,3 1,4 1,5 1,6 1,7 
-//	2,0	2,1 2,2 2,3 2,4 2,5 2,6 2,7 
-//	3,0	3,1 3,2 3,3 3,4 3,5 3,6 3,7 
-//	4,0	4,1 4,2 4,3 4,4 4,5 4,6 4,7 
-//	5,0	5,1 5,2 5,3 5,4 5,5 5,6 5,7	 
-//	6,0	6,1 6,2 6,3 6,4 6,5 6,6 6,7 
-//	7,0	7,1 7,2 7,3 7,4 7,5 7,6 7,7 
-//		 				
-	
-//	fclose(fuptr);
+	FILE * fuptr;
+	if((fuptr = fopen("checkersLog.txt", "rb+")) == NULL)
+    {
+        printf("Error opening file\n");
+        exit(1);
+    }
+  
+	if( rmv == 0 ) // tas yeme durumu yoksa 
+	{
+		loc = i1*9 + j1;
+		fseek(fuptr, loc, SEEK_SET);
+		fread(&t, sizeof(t), 1, fuptr);
+		fseek(fuptr, loc, SEEK_SET);
+		fwrite(&emp, sizeof(char), 1, fuptr);
+		
+		loc = i2*9 + j2;
+		fseek(fuptr, loc, SEEK_SET);
+		t = checker[i2][j2];
+		fwrite(&t, sizeof(char), 1, fuptr);
+	}
+	else if( rmv == 1 ) // tas yeme durumu varsa
+	{
+		loc = i1*9 + j1;
+		fseek(fuptr, loc, SEEK_SET);
+		fwrite(&emp, sizeof(char), 1, fuptr);
+		
+		loc = ri*9 + rj;
+		fseek(fuptr, loc, SEEK_SET);
+		fwrite(&emp, sizeof(char), 1, fuptr);
+		
+		loc = i2*9 + j2;
+		fseek(fuptr, loc, SEEK_SET);
+		t = checker[i2][j2];
+		fwrite(&t, sizeof(char), 1, fuptr);
+	}
+	else
+	{
+        printf("Error updating file\n");
+        getch();
+    }
+ 	fclose(fuptr);
 }
 
 void fileUploader(char checker[MAX_ROW][MAX_COL]) // bu fonksiyon oyun yeni acildiginda kalan oyundan devam edilmek istenirse dosyadaki kayittan tahta durumunu getirmek icin olusturuldu
@@ -172,8 +203,6 @@ void displayboard(char checker[MAX_ROW][MAX_COL]){
 	printf("\n\n");
 
 } // end function
-
-
 
 void populatechecker(char checker[MAX_ROW][MAX_COL]){	// bu fonksiyon taslarin ilk dizilisini ayarlamak icin
 	int i, j;											// ayni zamanda checker[][] dizisini de olusturuyor
@@ -335,6 +364,7 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 		
 		checker[i2][j2] = 'W';
 		checker[i1][j1] = ' ';
+		fileUpdater(checker, i1, i2, j1, j2, 0, 0, 0);
 		return 1;
 	}
 	// dama olma durumlari tek kare giderek black
@@ -343,6 +373,7 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 		
 		checker[i2][j2] = 'B';
 		checker[i1][j1] = ' ';
+		fileUpdater(checker, i1, i2, j1, j2, 0, 0, 0);
 		return 1;
 	}
 	// dama olma durumlari tas yiyerek white
@@ -352,6 +383,7 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 		bpiece--;
 		checker[i2][j2] = 'W';
 		checker[i1][j1] = ' ';
+		fileUpdater(checker, i1, i2, j1, j2, 1, 6, j1);
 		return 2;
 	}
 	// dama olma durumlari tas yiyerek black
@@ -361,6 +393,7 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 		bpiece--;
 		checker[i2][j2] = 'B';
 		checker[i1][j1] = ' ';
+		fileUpdater(checker, i1, i2, j1, j2, 1, 1, j1);
 		return 2;
 	}
 	// tek kare gitme durumlari
@@ -371,6 +404,7 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 			else if(checker[i1][j1] == 'W')
 				checker[i2][j2] = 'W';
 			checker[i1][j1] = ' ';
+			fileUpdater(checker, i1, i2, j1, j2, 0, 0, 0);
 			return 1;
 					
 		}
@@ -381,6 +415,7 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 			else if(checker[i1][j1] == 'B')
 				checker[i2][j2] = 'B';
 			checker[i1][j1] = ' ';
+			fileUpdater(checker, i1, i2, j1, j2, 0, 0, 0);
 			return 1;
 			
 		}
@@ -394,6 +429,7 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 			checker[i1][j1] = ' ';
 			checker[i1][j2-1] = ' ';
 			bpiece--;
+			fileUpdater(checker, i1, i2, j1, j2, 1, i1, j2-1);
 			return 2;
 		}
 	// tas yeme durumlari beyaz siyahi yer sol	
@@ -406,6 +442,7 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 			checker[i1][j1] = ' ';
 			checker[i1][j2+1] = ' ';
 			bpiece--;
+			fileUpdater(checker, i1, i2, j1, j2, 1, i1, j2+1);
 			return 2;
 		}
 	// tas yeme durumlari beyaz siyahi yer asagi		
@@ -418,6 +455,7 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 			checker[i1][j1] = ' ';
 			checker[i1+1][j1] = ' ';
 			bpiece--;
+			fileUpdater(checker, i1, i2, j1, j2, 1, i1+1, j1);
 			return 2;
 		}
 	
@@ -431,6 +469,7 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 			checker[i1][j1] = ' ';
 			checker[i1][j2-1] = ' ';
 			wpiece--;
+			fileUpdater(checker, i1, i2, j1, j2, 1, i1, j2-1);
 			return 2;
 		}
 	// tas yeme durumlari siyah beyazi yer sol	
@@ -443,6 +482,7 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 			checker[i1][j1] = ' ';
 			checker[i1][j2+1] = ' ';
 			wpiece--;
+			fileUpdater(checker, i1, i2, j1, j2, 1, i1, j2+1);
 			return 2;
 		}
 	// tas yeme durumlari siyah beyazi yer yukari		
@@ -455,6 +495,7 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 			checker[i1][j1] = ' ';
 			checker[i1-1][j1] = ' ';
 			wpiece--;
+			fileUpdater(checker, i1, i2, j1, j2, 1, i1-1, j1);
 			return 2;
 		}
 
@@ -476,7 +517,6 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 			
 		for(i = s+1 ; i<g ; i++ )
 		{
-			 
 			if(checker[i][j1] == 'b' || checker[i][j1] == 'B')
 			{
 				x = i;
@@ -486,22 +526,25 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 		}
 		if(c == 0)
 		{
-		 
 			checker[i2][j2] = 'W';
 			checker[i1][j1] = ' ';
+			fileUpdater(checker, i1, i2, j1, j2, 0, 0, 0);
 			return 1;
 		}	
 			
 		else if(c >= 2){
+			printf("\nBirden fazla tasi ayni anda yiyemezsiniz, lutfen hamleleri teker teker giriniz. \nDevam etmek icin bir tusa basin.\n");
+			getch();
+			fflush(stdin);
 			return 0;
 		}
 		else if(c == 1)
 		{
-		 
 			checker[i2][j2] = 'W';
 			checker[i1][j1] = ' ';
 			checker[x][y] = ' ';
 			bpiece--;
+			fileUpdater(checker, i1, i2, j1, j2, 1, x, y);
 			return 2;
 			
 		}
@@ -534,6 +577,7 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 		{
 			checker[i2][j2] = 'W';
 			checker[i1][j1] = ' ';
+			fileUpdater(checker, i1, i2, j1, j2, 0, 0, 0);
 			return 1;
 		}	
 			
@@ -546,6 +590,7 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 			checker[i1][j1] = ' ';
 			checker[x][y] = ' ';
 			bpiece--;
+			fileUpdater(checker, i1, i2, j1, j2, 1, x, y);
 			return 2;
 			
 		}
@@ -579,6 +624,7 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 		{
 			checker[i2][j2] = 'B';
 			checker[i1][j1] = ' ';
+			fileUpdater(checker, i1, i2, j1, j2, 0, 0, 0);
 			return 1;
 		}	
 		else if(c >= 2)	
@@ -589,6 +635,7 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 			checker[i1][j1] = ' ';
 			checker[x][y] = ' ';
 			bpiece--;
+			fileUpdater(checker, i1, i2, j1, j2, 1, x, y);
 			return 2;
 		}
 	}
@@ -619,6 +666,7 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 		{
 			checker[i2][j2] = 'B';
 			checker[i1][j1] = ' ';
+			fileUpdater(checker, i1, i2, j1, j2, 0, 0, 0);
 			return 1;
 		}	
 		else if(c >= 2)	
@@ -629,6 +677,7 @@ int commandChecker(char checker[MAX_ROW][MAX_COL], char command[4], int player, 
 			checker[i1][j1] = ' ';
 			checker[x][y] = ' ';
 			bpiece--;
+			fileUpdater(checker, i1, i2, j1, j2, 1, x, y);
 			return 2;
 		}
 	}
@@ -703,8 +752,7 @@ int gameFunction(char checker[MAX_ROW][MAX_COL], int wpiece, int bpiece, int pla
 						displayboard(checker);
 						black=1;
 						white=0;
-						commandLogFunc(playe, command);
-						
+						commandLogFunc(playe, command);					
 					}
 				else if( a == 2)
 					{
