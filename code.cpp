@@ -242,9 +242,14 @@ void gameScore(int white, int black)
 		printf("***White Wins!***");
 	else if (black == 1)
 		printf("***Black Wins!***");
-
+	
+	printf("\n\nType any to go to main menu.");
+	fflush(stdin);
+	getch();
+ 
 	char checker[MAX_ROW][MAX_COL];
 	populatechecker(checker);
+	fileCreator(checker);
 } // end function
 
 void progressSelector(char checker[MAX_ROW][MAX_COL], int cnt) // bu fonksiyon oyunun sifirdan mi basladigini yoksa kaldigi yerden devam mi ettigini kontrol edip ekrani duzenliyor.
@@ -750,7 +755,7 @@ int gameFunction(char checker[MAX_ROW][MAX_COL], int wpiece, int bpiece, int pla
 						displayboard(checker);
 						black=1;
 						white=0;
-						commandLogFunc(playe, command);					
+						commandLogFunc(playe, command);		
 					}
 				else if( a == 2)
 					{
@@ -758,6 +763,7 @@ int gameFunction(char checker[MAX_ROW][MAX_COL], int wpiece, int bpiece, int pla
 						black=0;
 						white=1;
 						commandLogFunc(playe, command);
+						bpiece--;
 					}
 					
 				else if(a == 0)
@@ -791,6 +797,7 @@ int gameFunction(char checker[MAX_ROW][MAX_COL], int wpiece, int bpiece, int pla
 						black=1;
 						white=0;
 						commandLogFunc(playe, command);
+						wpiece--;
 					}
 					
 				else if( a == 0)
@@ -800,11 +807,10 @@ int gameFunction(char checker[MAX_ROW][MAX_COL], int wpiece, int bpiece, int pla
 		}
 	 
 	} while( wpiece != 0 && bpiece !=0 );	
-	if(wpiece == 0 )
-	 	gameScore(0,1);
-	else if ( bpiece == 0)
-		gameScore(1,0);
-	
+		if(wpiece == 0)
+			gameScore(0,1);
+		else if(bpiece == 0)
+			gameScore(1,0);
 } // end function
 
 int main()
